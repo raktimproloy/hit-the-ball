@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+    <div class="server">
+        <div class="inputName">
+            <input id="nameInput" type="text" placeholder="Your Name">
+        </div>
+        <p id="createServer">Create Server</p>
+        <input id="serverInput" type="text" placeholder="Server Id">
+        <p id="joinServer">Join Server</p>
+    </div>
+    <div class="selection">
+        <p class="serverName">SERVER: <span id="showServerId"></span></p>
+        
+        <p id="playerOne">Player one <span></span></p>
+        <p id="playerTwo">Player two <span></span></p>
+        <p id="playerThree">Player three <span></span></p>
+        <p id="playerFour">Player four <span></span></p>
+    </div>
+    <div class="box">
+
+        <div class="ball"></div>
+        <div class="paddle"></div>
+        <div class="paddleTop"></div>
+        <div class="paddleLeft"></div>
+        <div class="paddleRight"></div>
+    </div>
+    <div class="info">
+        <p>Game Info</p>
+        <p>Server Id: <span class="serverIdShow">fdslakow0</span></p>
+        <p>Total player: <span class="playerCount">3</span></p>
+        <p>Bottom side: <span class="playerOneName">Player One</span> <span class="playerOnePoint">(10)</span></p>
+        <p>Top side: <span class="playerTwoName">Player Two</span> <span class="playerTwoPoint">(10)</span></p>
+        <p>Left side: <span class="playerThreeName">Player Three</span> <span class="playerThreePoint">(10)</span></p>
+        <p>Right side: <span class="playerFourName">Player Four</span> <span class="playerFourPoint">(10)</span></p>
+    </div>
+    <div class="buttonContainer disable">
+        <p>Start Game</p>
+    </div>
+    <script type="module" src="selection.js"></script>
+</body>
+</html>

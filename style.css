@@ -1,0 +1,155 @@
+.box{
+    width: 1000px;
+    height: 600px;
+    margin: 0 auto;
+    background-color: rgb(189, 64, 64);
+    position: relative;
+    display: none;
+    
+}
+.ball{
+    position: absolute;
+    top: 300px;
+    left: 500px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: blue;
+}
+.paddle{
+    /* display: none; */
+    position: absolute;
+    left: 500px;
+    top: 95%;
+    width: 140px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: black;
+}
+.paddleTop{
+    /* display: none; */
+    position: absolute;
+    left: 500px;
+    top: 3%;
+    width: 140px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: black;
+}
+.paddleLeft{
+    /* display: none; */
+    position: absolute;
+    left: 2%;
+    top: 300px;
+    width: 20px;
+    height: 140px;
+    border-radius: 10px;
+    background-color: black;
+}
+.paddleRight{
+    /* display: none; */
+    position: absolute;
+    left: 96%;
+    top: 300px;
+    width: 20px;
+    height: 140px;
+    border-radius: 10px;
+    background-color: black;
+}
+
+/* Selection */
+.selection{
+    display: none;
+    width: 40%;
+    margin: 2% auto;
+    border: 2px solid gray;
+}
+.inputName{
+    text-align: center;
+    margin-top: 2%;
+}
+.inputName input{
+    width: 30%;
+    padding: 2%;
+    font-size: 20px;
+    text-align: center;
+}
+.selection p {
+    background: rgb(255, 83, 83);
+    color: white;
+    width: 30%;
+    margin: 2% auto;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 2% 3%;
+    border-radius: 10px;
+    border: 2px solid purple;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+.select{
+    background: blueviolet !important;
+}
+.serverName{
+    background: gray !important;
+    cursor: default !important; 
+}
+
+/* Start game */
+.buttonContainer{
+    display: none;
+    width: 30%;
+    margin: 0 auto;
+    text-align: center;
+    background: rgb(65, 65, 255);
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid purple;
+    cursor: pointer;
+}
+.disable{
+    background: gray;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* server */
+.server{
+    width: 40%;
+    margin: 2% auto;
+    border: 2px solid gray;
+    text-align: center;
+}
+.server p {
+    background: rgb(255, 83, 83);
+    color: white;
+    width: 30%;
+    margin: 2% auto;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 2% 3%;
+    border-radius: 10px;
+    border: 2px solid purple;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+.server input {
+    width: 30%;
+    padding: 2%;
+    font-size: 20px;
+    text-align: center;
+}
+
+.info{
+    display: none;
+    position: absolute;
+    right: 2%;
+    top: 2%;
+    border: 2px solid black;
+    padding: 2%;
+    font-size: 18px;
+    text-align: center;
+}
