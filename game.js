@@ -10,7 +10,6 @@ export function game(serverId){
     const paddleTop = document.querySelector(".paddleTop")
     const paddleLeft = document.querySelector(".paddleLeft")
     const paddleRight = document.querySelector(".paddleRight")
-    const brick = document.querySelector(".brick")
 
     const playerOnePoint = document.querySelector(".playerOnePoint")
     const playerTwoPoint = document.querySelector(".playerTwoPoint")
@@ -53,6 +52,48 @@ export function game(serverId){
         speedDown()
     }
     
+    const finishedGame = () => {
+        const finishedInfo = document.querySelector(".finishedInfo")
+        const finishOneName = document.querySelector(".finishOneName")
+        const finishTwoName = document.querySelector(".finishTwoName")
+        const finishThreeName = document.querySelector(".finishThreeName")
+        const finishFourName = document.querySelector(".finishFourName")
+        const finishOnePoint = document.querySelector(".finishOnePoint")
+        const finishTwoPoint = document.querySelector(".finishTwoPoint")
+        const finishThreePoint = document.querySelector(".finishThreePoint")
+        const finishFourPoint = document.querySelector(".finishFourPoint")
+        const restartBtn = document.querySelector(".restartBtn")
+
+        get(child(dbRef, `hit-the-ball/`)).then((snapshot) =>{
+            finishedInfo.style.display = "flex"
+            finishOneName.innerText = `${snapshot.val()?.[serverId]?.playerOne?.Name || ""}`
+            finishTwoName.innerText = `${snapshot.val()?.[serverId]?.playerTwo?.Name || ""}`
+            finishThreeName.innerText = `${snapshot.val()?.[serverId]?.playerThree?.Name || ""}`
+            finishFourName.innerText = `${snapshot.val()?.[serverId]?.playerFour?.Name || ""}`
+            finishOnePoint.innerText = `${snapshot.val()?.[serverId]?.playerOne?.point || ""}`
+            finishTwoPoint.innerText = `${snapshot.val()?.[serverId]?.playerTwo?.point || ""}`
+            finishThreePoint.innerText = `${snapshot.val()?.[serverId]?.playerThree?.point || ""}`
+            finishFourPoint.innerText = `${snapshot.val()?.[serverId]?.playerFour?.point || ""}`
+        })
+        restartBtn.addEventListener("click", () => {
+            // const selectionContainer = document.querySelector(".selection")
+            // const buttonContainer = document.querySelector(".buttonContainer")
+
+            // selectionContainer.style.display = "block"
+            // buttonContainer.style.display = "block"
+            // buttonContainer.classList.remove("disable")
+            // box.style.display = "none"
+            // finishedInfo.style.display = "none"
+            // set(ref(db, `hit-the-ball/${serverId}/gameInfo`), `selection`)
+            // .then(() => {
+            //     finishedGame()
+            // })
+            // .catch((err) => {
+            // console.log("Err");
+            // })
+            window.location.reload()
+        })
+    }
     // Fire base
 
     const firebaseConfig = {
@@ -79,13 +120,18 @@ export function game(serverId){
             playerThreePoint.innerText = `(${snapshot.val()?.[serverId]?.playerThree?.point || ""})`
             playerFourPoint.innerText = `(${snapshot.val()?.[serverId]?.playerFour?.point || ""})`
             ballHolder = `${snapshot.val()?.[serverId]?.ballHolder}`
-            // if(snapshot.val()?.[serverId]?.playerOne?.point == "0" || 
-            // snapshot.val()?.[serverId]?.playerTwo?.point == "0" ||
-            // snapshot.val()?.[serverId]?.playerThree?.point == "0" || 
-            // snapshot.val()?.[serverId]?.playerFour?.point){
-            //     alert("Game Over")
-            //     window.location.reload()
-            // }
+            if(snapshot.val()?.[serverId]?.playerOne?.point == "0" || 
+            snapshot.val()?.[serverId]?.playerTwo?.point == "0" ||
+            snapshot.val()?.[serverId]?.playerThree?.point == "0" || 
+            snapshot.val()?.[serverId]?.playerFour?.point){
+                set(ref(db, `hit-the-ball/${serverId}/gameInfo`), `finished`)
+                .then(() => {
+                    finishedGame()
+                })
+                .catch((err) => {
+                console.log("Err");
+                })
+            }
             reset()
         }else if(snapshot.val()?.[serverId]?.ball){
             ball.setAttribute("style", `top: ${snapshot.val()?.[serverId]?.ball?.top}px; left: ${snapshot.val()?.[serverId]?.ball?.left}px;`)
@@ -238,7 +284,7 @@ export function game(serverId){
                         }
                         xAdd = -4
                     }else{
-                        if(x >= 965){
+                        if(x >= 975){
                             set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
                             .then(() => {
                                 
@@ -389,18 +435,20 @@ export function game(serverId){
     box.addEventListener("click", () => {
         const dbRef = ref(getDatabase());
         get(child(dbRef, `hit-the-ball/`)).then((snapshot) =>{
-            if(snapshot.val()?.[serverId].ballMiss === true){
-                if(playerName === ballHolder){
-                    set(ref(db, `hit-the-ball/${serverId}/ballMiss`), false)
-                    .then(() => {
-                    //   console.log("Success");
-                    })
-                    .catch((err) => {
-                    console.log("Err");
-                    })
-                    x = 500
-                    y = 300
-                    startRun()
+            if(snapshot.val()?.[serverId].gameInfo !== "finished"){
+                if(snapshot.val()?.[serverId].ballMiss === true){
+                    if(playerName === ballHolder){
+                        set(ref(db, `hit-the-ball/${serverId}/ballMiss`), false)
+                        .then(() => {
+                        //   console.log("Success");
+                        })
+                        .catch((err) => {
+                        console.log("Err");
+                        })
+                        x = 500
+                        y = 300
+                        startRun()
+                    }
                 }
             }
         })

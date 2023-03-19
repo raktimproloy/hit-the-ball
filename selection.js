@@ -26,6 +26,7 @@ const playerFourName = document.querySelector(".playerFourName")
 
 let serverId = "";
 let clickCount = 0;
+nameInput.value = localStorage.getItem("name") || ""
 
 // Fire base
 
@@ -34,14 +35,6 @@ let clickCount = 0;
   import { getDatabase, ref, onValue, set, get, child, remove } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
 
   // Your web app's Firebase configuration
-//   const firebaseConfig = {
-//     apiKey: "AIzaSyDMtR1HjJJafyYWqzLxuppZiu-PBtfuLX0",
-//     authDomain: "paddle-hit.firebaseapp.com",
-//     projectId: "paddle-hit",
-//     storageBucket: "paddle-hit.appspot.com",
-//     messagingSenderId: "183694422838",
-//     appId: "1:183694422838:web:46cfc715a5c091354db997"
-//   };
 
 const firebaseConfig = {
     apiKey: "AIzaSyDs3JGOd62lI6bBrVfV4ih8XcPmq3zEGoM",
