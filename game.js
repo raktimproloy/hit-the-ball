@@ -84,13 +84,13 @@ export function game(serverId){
             // buttonContainer.classList.remove("disable")
             // box.style.display = "none"
             // finishedInfo.style.display = "none"
-            // set(ref(db, `hit-the-ball/${serverId}/gameInfo`), `selection`)
-            // .then(() => {
-            //     finishedGame()
-            // })
-            // .catch((err) => {
-            // console.log("Err");
-            // })
+            set(ref(db, `hit-the-ball/${serverId}/gameInfo`), `selection`)
+            .then(() => {
+                finishedGame()
+            })
+            .catch((err) => {
+            console.log("Err");
+            })
             window.location.reload()
         })
     }
