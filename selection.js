@@ -21,7 +21,7 @@ const playerCount = document.querySelector(".playerCount")
 const playerOneName = document.querySelector(".playerOneName")
 const playerTwoName = document.querySelector(".playerTwoName")
 const playerThreeName = document.querySelector(".playerThreeName")
-const playerFourName = document.querySelector(".playerFourPoint")
+const playerFourName = document.querySelector(".playerFourName")
 
 
 let serverId = "";
@@ -57,6 +57,7 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   const db = getDatabase();
 
+ 
 
   // Listen for real-time updates
   onValue(ref(db, `hit-the-ball/`), (snapshot) => {
@@ -139,7 +140,7 @@ const firebaseConfig = {
         serverIdShow.innerText = serverId
         const creatorName = nameInput.value
         localStorage.setItem("name", creatorName)
-        set(ref(db, `hit-the-ball/${serverId}/`), {owner: creatorName, playersCount: "1",gameInfo: "selection", ballMiss: true })
+        set(ref(db, `hit-the-ball/${serverId}/`), {owner: creatorName, playersCount: "1",gameInfo: "selection", ballMiss: true, ballHolder: "" })
         .then(() => {
         //   console.log("Success");
         })
@@ -178,6 +179,7 @@ const firebaseConfig = {
                         serverContainer.style.display = "none"
                         selectionContainer.style.display = "block"
                         startBtn.style.display = "block"
+                        infoContainer.style.display = "block"
                         localStorage.removeItem("player")
                         localStorage.setItem("name", nameInput.value)
 
@@ -221,8 +223,10 @@ const firebaseConfig = {
 const selected = (which) => {
     const selectedId = document.getElementById(which)
     if(selectedId.classList.contains("select")){
+        console.log("This acha");
         alert("select another")
     }else{
+        console.log("This Nai");
         const prevSelection = localStorage.getItem("player")
         remove(ref(getDatabase(), `hit-the-ball/${serverId}/${prevSelection}`))
 
@@ -232,7 +236,7 @@ const selected = (which) => {
         }
         selectedId.classList.add("select")
         localStorage.setItem("player", which)
-        
+        cngName({identy: which, name: `${nameInput.value}`})
     }
 
 }
@@ -240,22 +244,22 @@ const selected = (which) => {
 // all selection button
 playerOne.addEventListener("click", () => {
     selected("playerOne")
-    cngName({identy:"playerOne", name: `${nameInput.value ? nameInput.value : "playerOne"}`})
+    
 })
 
 playerTwo.addEventListener("click", () => {
     selected("playerTwo")
-    cngName({identy:"playerTwo", name: `${nameInput.value ? nameInput.value : "playerTwo"}`})
+    // cngName({identy:"playerTwo", name: `${nameInput.value}`})
 })
 
 playerThree.addEventListener("click", () => {
     selected("playerThree")
-    cngName({identy:"playerThree", name: `${nameInput.value ? nameInput.value : "playerThree"}`})
+    // cngName({identy:"playerThree", name: `${nameInput.value ? nameInput.value : "playerThree"}`})
 })
 
 playerFour.addEventListener("click", () => {
     selected("playerFour")
-    cngName({identy:"playerFour", name: `${nameInput.value ? nameInput.value : "playerFour"}`})
+    // cngName({identy:"playerFour", name: `${nameInput.value ? nameInput.value : "playerFour"}`})
 })
 
 
@@ -266,6 +270,13 @@ startBtn.addEventListener("click", () => {
         selectionContainer.style.display = "none"
         box.style.display = "block"
         startBtn.style.display = "none"
+        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), `${localStorage.getItem("player")}`)
+        .then(() => {
+            
+        })
+        .catch((err) => {
+        console.log("Err");
+        })
         game(serverId)
     })
     .catch((err) => {

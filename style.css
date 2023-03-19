@@ -77,7 +77,7 @@
 .selection p {
     background: rgb(255, 83, 83);
     color: white;
-    width: 30%;
+    width: 50%;
     margin: 2% auto;
     text-align: center;
     font-size: 20px;
@@ -87,6 +87,9 @@
     border: 2px solid purple;
     cursor: pointer;
     transition: all .2s ease-in-out;
+}
+.selection p:first-child{
+    margin-bottom: 5%;
 }
 .select{
     background: blueviolet !important;
@@ -125,7 +128,7 @@
 .server p {
     background: rgb(255, 83, 83);
     color: white;
-    width: 30%;
+    width: 50%;
     margin: 2% auto;
     text-align: center;
     font-size: 20px;
@@ -137,10 +140,13 @@
     transition: all .2s ease-in-out;
 }
 .server input {
-    width: 30%;
+    width: 50%;
     padding: 2%;
     font-size: 20px;
     text-align: center;
+}
+.server input:first-child{
+    margin-bottom: 5%;
 }
 
 .info{

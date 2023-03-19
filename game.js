@@ -21,7 +21,7 @@ export function game(serverId){
     var delta
     
     var playerName = localStorage.getItem("player")
-    var ballHolder = "playerOne"
+    var ballHolder;
 
     var x = 500
     var y = 300 //start game ball post
@@ -50,28 +50,11 @@ export function game(serverId){
 
     const reset = () => {
         stopRun()
-        // set(ref(db, `hit-the-ball/${serverId}/ball`), {top: 300, left: 500})
-        // .then(() => {
-        // //   console.log("Success");
-        // })
-        // .catch((err) => {
-        // console.log("Err");
-        // })
+        speedDown()
     }
     
     // Fire base
-    
 
-    
-      // Your web app's Firebase configuration
-    //   const firebaseConfig = {
-    //     apiKey: "AIzaSyDMtR1HjJJafyYWqzLxuppZiu-PBtfuLX0",
-    //     authDomain: "paddle-hit.firebaseapp.com",
-    //     projectId: "paddle-hit",
-    //     storageBucket: "paddle-hit.appspot.com",
-    //     messagingSenderId: "183694422838",
-    //     appId: "1:183694422838:web:46cfc715a5c091354db997"
-    //   };
     const firebaseConfig = {
         apiKey: "AIzaSyDs3JGOd62lI6bBrVfV4ih8XcPmq3zEGoM",
         authDomain: "hit-the-ball-2800b.firebaseapp.com",
@@ -91,11 +74,18 @@ export function game(serverId){
       onValue(ref(db, `hit-the-ball/`), (snapshot) => {
         otherPaddle(snapshot.val()?.[serverId])
         if(snapshot.val()?.[serverId]?.ballMiss === true){
-            console.log("ball miss")
-            playerOnePoint.innerText = `(${snapshot.val()?.[serverId]?.playerOne?.point})`
-            playerTwoPoint.innerText = `(${snapshot.val()?.[serverId]?.playerTwo?.point})`
-            playerThreePoint.innerText = `(${snapshot.val()?.[serverId]?.playerThree?.point})`
-            playerFourPoint.innerText = `(${snapshot.val()?.[serverId]?.playerFour?.point})`
+            playerOnePoint.innerText = `(${snapshot.val()?.[serverId]?.playerOne?.point || ""})`
+            playerTwoPoint.innerText = `(${snapshot.val()?.[serverId]?.playerTwo?.point || ""})`
+            playerThreePoint.innerText = `(${snapshot.val()?.[serverId]?.playerThree?.point || ""})`
+            playerFourPoint.innerText = `(${snapshot.val()?.[serverId]?.playerFour?.point || ""})`
+            ballHolder = `${snapshot.val()?.[serverId]?.ballHolder}`
+            // if(snapshot.val()?.[serverId]?.playerOne?.point == "0" || 
+            // snapshot.val()?.[serverId]?.playerTwo?.point == "0" ||
+            // snapshot.val()?.[serverId]?.playerThree?.point == "0" || 
+            // snapshot.val()?.[serverId]?.playerFour?.point){
+            //     alert("Game Over")
+            //     window.location.reload()
+            // }
             reset()
         }else if(snapshot.val()?.[serverId]?.ball){
             ball.setAttribute("style", `top: ${snapshot.val()?.[serverId]?.ball?.top}px; left: ${snapshot.val()?.[serverId]?.ball?.left}px;`)
@@ -106,15 +96,7 @@ export function game(serverId){
       const cngPaddle = (leftPost) => {
         set(ref(db, `hit-the-ball/${serverId}/${leftPost.identy}/Paddle`), leftPost.paddlePos)
         .then(() => {
-            // if(leftPost.identy === "playerFour"){
-            //     paddleRight.style.top = `${leftPost.paddlePos}px`
-            // }else if(leftPost.identy === "playerThree"){
-            //     paddleLeft.style.top = `${delta}px`
-            // }else if(leftPost.identy === "playerTwo"){
-            //     paddleTop.style.left = `${delta}px`
-            // }else if(leftPost.identy === "playerOne"){
-            //     paddle.style.left = `${delta}px`
-            // }
+
         })
         .catch((err) => {
           console.log("Err");
@@ -128,7 +110,7 @@ export function game(serverId){
         
             delta = e.clientY - 8 - (140 /2) ;
             if(delta > 0 && delta < 460){
-                paddleRight.style.top = `${leftPost.paddlePos}px`
+                paddleRight.style.top = `${delta}px`
                 cngPaddle({identy:"playerFour", paddlePos: delta})
             }
         }
@@ -164,7 +146,6 @@ export function game(serverId){
 
     
     function run() {
-        console.log(ballHolder);
         // ball.setAttribute("style", `top: ${y}px; left: ${x}px;`)
         if(playerName === ballHolder){
             set(ref(db, `hit-the-ball/${serverId}/ball`), {top: y, left: x})
@@ -182,6 +163,8 @@ export function game(serverId){
         let paddleStart = parseInt(getComputedStyle(paddle).left.replace("px", ""))
         let paddleWidth = parseInt(getComputedStyle(paddle).width.replace("px", ""))
         let paddleHeight = parseInt(getComputedStyle(paddle).height.replace("px", ""))
+
+        
         // Paddle top
         let paddleTopStart = parseInt(getComputedStyle(paddleTop).left.replace("px", ""))
         let paddleTopWidth = parseInt(getComputedStyle(paddleTop).width.replace("px", ""))
@@ -201,15 +184,17 @@ export function game(serverId){
         let paddleRightHeight = parseInt(getComputedStyle(paddleRight).height.replace("px", ""))
     
         
-        // if(x <= (boxWidth -(boxWidth - (paddleLeftWidth*2) ))){ //LEft
         if(x <= (0 + paddleLeftStart + paddleLeftWidth)){ //LEft
             get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
                 if(snapshot.val()?.[serverId]?.playerThree){
                     if(y >= paddleLeftTopPos  && y <= (paddleLeftTopPos + paddleLeftHeight)){
+                        if(y <= paddleLeftTopPos + 35){
+                            yAdd = -4
+                        }else if(y >= paddleLeftTopPos + 105 && y<= paddleLeftTopPos + paddleLeftHeight){
+                            yAdd = 4
+                        }
                         xAdd = 4
-                        console.log("Hit");
                     }else{
-                        console.log("Not hit");
                         if(x === 0){
                             set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
                             .then(() => {
@@ -219,7 +204,13 @@ export function game(serverId){
                                     set(ref(db, `hit-the-ball/${serverId}/playerThree/point`), `${point - 1}`)
                                     .then(() => {
                                         console.log(point);
-                                        // ballHolder = "playerThree"
+                                        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerThree")
+                                        .then(() => {
+                                        //   console.log("Success");
+                                        })
+                                        .catch((err) => {
+                                        console.log("Err");
+                                        })
                                     })
                                     .catch((err) => {
                                     console.log("Err");
@@ -240,10 +231,13 @@ export function game(serverId){
             get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
                 if(snapshot.val()?.[serverId]?.playerFour){
                     if(y >= paddleRightTopPos  && y <= (paddleRightTopPos + paddleRightHeight)){
+                        if(y <= paddleRightTopPos + 35){
+                            yAdd = -4
+                        }else if(y >= paddleRightTopPos + 105 && y<= paddleRightTopPos + paddleRightHeight){
+                            yAdd = 4
+                        }
                         xAdd = -4
-                        console.log("Hit");
                     }else{
-                        console.log("Not hit");
                         if(x >= 965){
                             set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
                             .then(() => {
@@ -252,7 +246,13 @@ export function game(serverId){
                                     const point = parseInt(snapshot.val()?.[serverId]?.playerFour?.point)
                                     set(ref(db, `hit-the-ball/${serverId}/playerFour/point`), `${point - 1}`)
                                     .then(() => {
-                                        // ballHolder = "playerOne"
+                                        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerFour")
+                                        .then(() => {
+                                        //   console.log("Success");
+                                        })
+                                        .catch((err) => {
+                                        console.log("Err");
+                                        })
                                     })
                                     .catch((err) => {
                                     console.log("Err");
@@ -273,10 +273,13 @@ export function game(serverId){
             get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
                 if(snapshot.val()?.[serverId]?.playerOne){
                     if(x >= paddleStart && x <= (paddleWidth + paddleStart)){
-                        console.log("paddle acha");
+                        if(x <= paddleStart + 35){
+                            xAdd = -4
+                        }else if(x >= paddleStart + 105 && x<= paddleStart + paddleWidth){
+                            xAdd = 4
+                        }
                         yAdd = -4
                     }else{
-                        console.log("paddle Nai");
                         if(y >= 582){
                             set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
                             .then(() => {
@@ -285,7 +288,13 @@ export function game(serverId){
                                     const point = parseInt(snapshot.val()?.[serverId]?.playerOne?.point)
                                     set(ref(db, `hit-the-ball/${serverId}/playerOne/point`), `${point - 1}`)
                                     .then(() => {
-                                        // ballHolder = "playerOne"
+                                        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerOne")
+                                        .then(() => {
+                                        //   console.log("Success");
+                                        })
+                                        .catch((err) => {
+                                        console.log("Err");
+                                        })
                                     })
                                     .catch((err) => {
                                     console.log("Err");
@@ -305,6 +314,11 @@ export function game(serverId){
                 get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
                     if(snapshot.val()?.[serverId]?.playerTwo){
                         if(x >= paddleTopStart && x <= (paddleTopWidth + paddleTopStart)){
+                            if(x <= paddleTopStart + 35){
+                                xAdd = -4
+                            }else if(x >= paddleTopStart + 105 && x<= paddleTopStart + paddleTopWidth){
+                                xAdd = 4
+                            }
                             yAdd = 4
                         }else{
                             if(y === 0){
@@ -314,7 +328,13 @@ export function game(serverId){
                                         const point = parseInt(snapshot.val()?.[serverId]?.playerTwo?.point)
                                         set(ref(db, `hit-the-ball/${serverId}/playerTwo/point`), `${point - 1}`)
                                         .then(() => {
-                                            // ballHolder = "playerOne"
+                                            set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerTwo")
+                                        .then(() => {
+                                        //   console.log("Success");
+                                        })
+                                        .catch((err) => {
+                                        console.log("Err");
+                                        })
                                         })
                                         .catch((err) => {
                                         console.log("Err");
@@ -336,10 +356,29 @@ export function game(serverId){
     }
     
     var interval
+    var speedInterval
+    var speed = 0
+
+    function speedUp(){
+        clearInterval(speedInterval)
+        speedInterval = setInterval(() => {
+            if(speed < 12){
+                speed = speed + 2
+            }
+            clearInterval(interval)
+            interval = setInterval(run, 20 - speed)
+        }, 10000)
+    }
+    
+    function speedDown(){
+        clearInterval(speedInterval)
+    }
     
     function startRun(){
+        speed = 0;
         clearInterval(interval)
-        interval = setInterval(run, 17)
+        interval = setInterval(run, 20 - speed)
+        speedUp()
     }
     // startRun()
     function stopRun(){
