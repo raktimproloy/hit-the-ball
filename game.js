@@ -123,7 +123,7 @@ export function game(serverId){
             if(snapshot.val()?.[serverId]?.playerOne?.point == "0" || 
             snapshot.val()?.[serverId]?.playerTwo?.point == "0" ||
             snapshot.val()?.[serverId]?.playerThree?.point == "0" || 
-            snapshot.val()?.[serverId]?.playerFour?.point){
+            snapshot.val()?.[serverId]?.playerFour?.point == "0"){
                 set(ref(db, `hit-the-ball/${serverId}/gameInfo`), `finished`)
                 .then(() => {
                     finishedGame()
