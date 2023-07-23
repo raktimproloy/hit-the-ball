@@ -1,11 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+input, textarea, select { font-family:inherit; }
+body{
+    background-color: #121212;
+    font-family: 'Kalam', cursive;
+}
+
+input {
+    width: 80%;
+    margin-bottom: 20px;
+    border: none;
+    background-color: #424242;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+}
 .box{
     width: 1000px;
     height: 600px;
-    margin: 0 auto;
+    margin: 2% auto;
     background-color: rgb(189, 64, 64);
     position: relative;
     display: none;
     
+}
+.info{
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+    pointer-events: none;
+    opacity: 0.15;
+    z-index: 0;
+}
+.playerOneNameContainer{
+    display: none;
+}
+.playerTwoNameContainer{
+    display: none;
+}
+.playerThreeNameContainer{
+    display: none;
+}
+.playerFourNameContainer{
+    display: none;
 }
 .ball{
     position: absolute;
@@ -15,6 +64,7 @@
     height: 20px;
     border-radius: 50%;
     background-color: blue;
+    z-index: 11;
 }
 .paddle{
     /* display: none; */
@@ -25,6 +75,7 @@
     height: 20px;
     border-radius: 10px;
     background-color: black;
+    opacity: 0;
 }
 .paddleTop{
     /* display: none; */
@@ -35,6 +86,7 @@
     height: 20px;
     border-radius: 10px;
     background-color: black;
+    opacity: 0;
 }
 .paddleLeft{
     /* display: none; */
@@ -45,6 +97,7 @@
     height: 140px;
     border-radius: 10px;
     background-color: black;
+    opacity: 0;
 }
 .paddleRight{
     /* display: none; */
@@ -55,6 +108,7 @@
     height: 140px;
     border-radius: 10px;
     background-color: black;
+    opacity: 0;
 }
 
 /* Selection */
@@ -62,20 +116,11 @@
     display: none;
     width: 40%;
     margin: 2% auto;
-    border: 2px solid gray;
-}
-.inputName{
-    text-align: center;
-    margin-top: 2%;
-}
-.inputName input{
-    width: 30%;
-    padding: 2%;
-    font-size: 20px;
-    text-align: center;
+    background: #2B2B2B;
+    padding: 2% 0;
 }
 .selection p {
-    background: rgb(255, 83, 83);
+    background-color: #794bc4;
     color: white;
     width: 50%;
     margin: 2% auto;
@@ -84,11 +129,13 @@
     font-weight: bold;
     padding: 2% 3%;
     border-radius: 10px;
-    border: 2px solid purple;
     cursor: pointer;
     transition: all .2s ease-in-out;
 }
-.selection p:first-child{
+.selection p:hover{
+    background-color: #663fa5;
+}
+.selection p:nth-child(2){
     margin-bottom: 5%;
 }
 .select{
@@ -102,15 +149,19 @@
 /* Start game */
 .buttonContainer{
     display: none;
-    width: 30%;
+    width: 20%;
     margin: 0 auto;
     text-align: center;
-    background: rgb(65, 65, 255);
+    background-color: #794bc4;
+    color: white;
+    padding: .8% 1.5%;
     font-size: 20px;
     font-weight: bold;
     border-radius: 10px;
-    border: 2px solid purple;
     cursor: pointer;
+}
+.buttonContainer:hover{
+    background-color: #663fa5;
 }
 .disable{
     background: gray;
@@ -122,11 +173,12 @@
 .server{
     width: 40%;
     margin: 2% auto;
-    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 2% 0%;
     text-align: center;
+    background: #2B2B2B;
 }
 .server p {
-    background: rgb(255, 83, 83);
     color: white;
     width: 50%;
     margin: 2% auto;
@@ -134,10 +186,14 @@
     font-size: 20px;
     font-weight: bold;
     padding: 2% 3%;
-    border-radius: 10px;
-    border: 2px solid purple;
     cursor: pointer;
     transition: all .2s ease-in-out;
+    border: none;
+    background-color: #794bc4;
+    border-radius: 10px;
+}
+.server p:hover{
+    background-color: #663fa5;
 }
 .server input {
     width: 50%;
@@ -145,20 +201,8 @@
     font-size: 20px;
     text-align: center;
 }
-.server input:first-child{
-    margin-bottom: 5%;
-}
 
-.info{
-    display: none;
-    position: absolute;
-    right: 1%;
-    top: 1%;
-    border: 2px solid black;
-    padding: 1%;
-    font-size: 18px;
-    text-align: center;
-}
+
 .finishedInfo{
     display: none;
     position: absolute;
@@ -191,4 +235,7 @@
     border: 2px solid purple;
     cursor: pointer;
     padding: 2%;
+}
+.errorInput{
+    border: 2px solid rgba(255, 0, 0, 0.616);
 }

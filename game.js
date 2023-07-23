@@ -15,6 +15,11 @@ export function game(serverId){
     const playerTwoPoint = document.querySelector(".playerTwoPoint")
     const playerThreePoint = document.querySelector(".playerThreePoint")
     const playerFourPoint = document.querySelector(".playerFourPoint")
+
+    const hitSound = document.getElementById("hitMusic")
+function playAudio() {
+    hitSound.play();
+}
     
     const ballRadius = parseInt(getComputedStyle(ball).width.replace("px", ""))
     var delta
@@ -190,7 +195,10 @@ export function game(serverId){
     })
     const dbRef = ref(getDatabase());
 
-    
+    var snapShotVal;
+    get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+        snapShotVal = snapshot.val()?.[serverId]
+    })
     function run() {
         // ball.setAttribute("style", `top: ${y}px; left: ${x}px;`)
         if(playerName === ballHolder){
@@ -231,132 +239,157 @@ export function game(serverId){
     
         
         if(x <= (0 + paddleLeftStart + paddleLeftWidth)){ //LEft
-            get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
-                if(snapshot.val()?.[serverId]?.playerThree){
-                    if(y >= paddleLeftTopPos  && y <= (paddleLeftTopPos + paddleLeftHeight)){
-                        if(y <= paddleLeftTopPos + 35){
-                            yAdd = -4
-                        }else if(y >= paddleLeftTopPos + 105 && y<= paddleLeftTopPos + paddleLeftHeight){
-                            yAdd = 4
-                        }
-                        xAdd = 4
-                    }else{
-                        if(x === 0){
-                            set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
-                            .then(() => {
-                                
-                                get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
-                                    const point = parseInt(snapshot.val()?.[serverId]?.playerThree?.point)
-                                    set(ref(db, `hit-the-ball/${serverId}/playerThree/point`), `${point - 1}`)
-                                    .then(() => {
-                                        console.log(point);
-                                        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerThree")
+            if(snapShotVal?.playerThree){
+                get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+                    if(snapshot.val()?.[serverId]?.playerThree){
+                        if(y >= paddleLeftTopPos  && y <= (paddleLeftTopPos + paddleLeftHeight)){
+                            if(y <= paddleLeftTopPos + 35){
+                                yAdd = -4
+                            }else if(y >= paddleLeftTopPos + 105 && y<= paddleLeftTopPos + paddleLeftHeight){
+                                yAdd = 4
+                            }
+                            xAdd = 4
+                            playAudio()
+                        }else{
+                            if(x === 0){
+                                set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
+                                .then(() => {
+                                    
+                                    get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+                                        const point = parseInt(snapshot.val()?.[serverId]?.playerThree?.point)
+                                        set(ref(db, `hit-the-ball/${serverId}/playerThree/point`), `${point - 1}`)
                                         .then(() => {
-                                        //   console.log("Success");
+                                            console.log(point);
+                                            set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerThree")
+                                            .then(() => {
+                                            //   console.log("Success");
+                                            })
+                                            .catch((err) => {
+                                            console.log("Err");
+                                            })
                                         })
                                         .catch((err) => {
                                         console.log("Err");
                                         })
                                     })
-                                    .catch((err) => {
-                                    console.log("Err");
-                                    })
+                                    
                                 })
-                                
-                            })
-                            .catch((err) => {
-                            console.log("Err");
-                            })
+                                .catch((err) => {
+                                console.log("Err");
+                                })
+                            }
                         }
+                    }else{
+                        xAdd = 4 
                     }
-                }else{
-                    xAdd = 4 
+                })
+            }else{
+                if(x === 0){
+                    xAdd = 4
+                    playAudio()
                 }
-            })
+            }
         }else if(x >= (boxWidth - (boxWidth- paddleRightStart + paddleRightWidth))){ //right
-            get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
-                if(snapshot.val()?.[serverId]?.playerFour){
-                    if(y >= paddleRightTopPos  && y <= (paddleRightTopPos + paddleRightHeight)){
-                        if(y <= paddleRightTopPos + 35){
-                            yAdd = -4
-                        }else if(y >= paddleRightTopPos + 105 && y<= paddleRightTopPos + paddleRightHeight){
-                            yAdd = 4
-                        }
-                        xAdd = -4
-                    }else{
-                        if(x >= 975){
-                            set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
-                            .then(() => {
-                                
-                                get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
-                                    const point = parseInt(snapshot.val()?.[serverId]?.playerFour?.point)
-                                    set(ref(db, `hit-the-ball/${serverId}/playerFour/point`), `${point - 1}`)
-                                    .then(() => {
-                                        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerFour")
+            if(snapShotVal?.playerFour){
+                get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+                    if(snapshot.val()?.[serverId]?.playerFour){
+                        if(y >= paddleRightTopPos  && y <= (paddleRightTopPos + paddleRightHeight)){
+                            if(y <= paddleRightTopPos + 35){
+                                yAdd = -4
+                            }else if(y >= paddleRightTopPos + 105 && y<= paddleRightTopPos + paddleRightHeight){
+                                yAdd = 4
+                            }
+                            xAdd = -4
+                            playAudio()
+                        }else{
+                            if(x >= 975){
+                                set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
+                                .then(() => {
+                                    
+                                    get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+                                        const point = parseInt(snapshot.val()?.[serverId]?.playerFour?.point)
+                                        set(ref(db, `hit-the-ball/${serverId}/playerFour/point`), `${point - 1}`)
                                         .then(() => {
-                                        //   console.log("Success");
+                                            set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerFour")
+                                            .then(() => {
+                                            //   console.log("Success");
+                                            })
+                                            .catch((err) => {
+                                            console.log("Err");
+                                            })
                                         })
                                         .catch((err) => {
                                         console.log("Err");
                                         })
                                     })
-                                    .catch((err) => {
-                                    console.log("Err");
-                                    })
                                 })
-                            })
-                            .catch((err) => {
-                            console.log("Err");
-                            })
+                                .catch((err) => {
+                                console.log("Err");
+                                })
+                            }
                         }
+                    }else{
+                        xAdd = -4
                     }
-                }else{
+                })
+            }else{
+                if(x >= 975){
                     xAdd = -4
+                    playAudio()
                 }
-            })
+            }
             
         }else if(y >= (boxHeight - ((paddleTopHeight*2) + (ballRadius/2)))){ //Bottom
-            get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
-                if(snapshot.val()?.[serverId]?.playerOne){
-                    if(x >= paddleStart && x <= (paddleWidth + paddleStart)){
-                        if(x <= paddleStart + 35){
-                            xAdd = -4
-                        }else if(x >= paddleStart + 105 && x<= paddleStart + paddleWidth){
-                            xAdd = 4
-                        }
-                        yAdd = -4
-                    }else{
-                        if(y >= 582){
-                            set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
-                            .then(() => {
-                                
-                                get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
-                                    const point = parseInt(snapshot.val()?.[serverId]?.playerOne?.point)
-                                    set(ref(db, `hit-the-ball/${serverId}/playerOne/point`), `${point - 1}`)
-                                    .then(() => {
-                                        set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerOne")
+            if(snapShotVal?.playerOne){
+                get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+                    if(snapshot.val()?.[serverId]?.playerOne){
+                        if(x >= paddleStart && x <= (paddleWidth + paddleStart)){
+                            if(x <= paddleStart + 35){
+                                xAdd = -4
+                            }else if(x >= paddleStart + 105 && x<= paddleStart + paddleWidth){
+                                xAdd = 4
+                            }
+                            yAdd = -4
+                            playAudio()
+                        }else{
+                            if(y >= 582){
+                                set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
+                                .then(() => {
+                                    
+                                    get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
+                                        const point = parseInt(snapshot.val()?.[serverId]?.playerOne?.point)
+                                        set(ref(db, `hit-the-ball/${serverId}/playerOne/point`), `${point - 1}`)
                                         .then(() => {
-                                        //   console.log("Success");
+                                            set(ref(db, `hit-the-ball/${serverId}/ballHolder`), "playerOne")
+                                            .then(() => {
+                                            //   console.log("Success");
+                                            })
+                                            .catch((err) => {
+                                            console.log("Err");
+                                            })
                                         })
                                         .catch((err) => {
                                         console.log("Err");
                                         })
                                     })
-                                    .catch((err) => {
-                                    console.log("Err");
-                                    })
                                 })
-                            })
-                            .catch((err) => {
-                            console.log("Err");
-                            })
+                                .catch((err) => {
+                                console.log("Err");
+                                })
+                            }
                         }
+                    }else{
+                        yAdd = -4
                     }
-                }else{
+                })
+            }else{
+                if(y >= 582){
                     yAdd = -4
+                    playAudio()
                 }
-            })
+            }
         }else if(y <= boxHeight - (boxHeight - (paddleTopHeight*2))){ // Top
+            if(snapShotVal?.playerTwo){
                 get(child(dbRef, `hit-the-ball/`)).then((snapshot) => {
                     if(snapshot.val()?.[serverId]?.playerTwo){
                         if(x >= paddleTopStart && x <= (paddleTopWidth + paddleTopStart)){
@@ -366,6 +399,7 @@ export function game(serverId){
                                 xAdd = 4
                             }
                             yAdd = 4
+                            playAudio()
                         }else{
                             if(y === 0){
                                 set(ref(db, `hit-the-ball/${serverId}/ballMiss`), true)
@@ -396,6 +430,12 @@ export function game(serverId){
                         yAdd = 4
                     }
                 })
+            }else{
+                if(y === 0){
+                    yAdd = 4
+                    playAudio()
+                }
+            }
         }
         x += xAdd
         y += yAdd

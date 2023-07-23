@@ -7,21 +7,27 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<body>
+    <audio id="hitMusic">
+        <source src="./audio/hit.wav" type="audio/ogg">
+    </audio>    
+    <audio id="buttonMusic">
+        <source src="./audio/click.mp3" type="audio/ogg">
+      </audio>
     <div class="server">
-        <div class="inputName">
-            <input id="nameInput" type="text" placeholder="Your Name">
-        </div>
-        <p id="createServer">Create Server</p>
+        <input id="nameInput" type="text" placeholder="Your Name">
+        <p class="button" id="createServer">Create Server</p>
         <input id="serverInput" type="text" placeholder="Server Id">
-        <p id="joinServer">Join Server</p>
+        <p class="button"id="joinServer">Join Server</p>
     </div>
     <div class="selection">
-        <p class="serverName">SERVER: <span id="showServerId"></span></p>
+        <p class="serverName">Total player: <span class="playerCount"></span></p>
+        <p class="serverName">Server Id: <span id="showServerId"></span></p>
         
-        <p id="playerOne">Player one <span></span></p>
-        <p id="playerTwo">Player two <span></span></p>
-        <p id="playerThree">Player three <span></span></p>
-        <p id="playerFour">Player four <span></span></p>
+        <p id="playerOne">Bottom side <span></span></p>
+        <p id="playerTwo">Top side <span></span></p>
+        <p id="playerThree">Left side <span></span></p>
+        <p id="playerFour">Right side <span></span></p>
     </div>
     <div class="box">
 
@@ -30,15 +36,15 @@
         <div class="paddleTop"></div>
         <div class="paddleLeft"></div>
         <div class="paddleRight"></div>
-    </div>
-    <div class="info">
-        <p>Game Info</p>
-        <p>Server Id: <span class="serverIdShow">fdslakow0</span></p>
-        <p>Total player: <span class="playerCount">3</span></p>
-        <p>Bottom side: <span class="playerOneName">Player One</span> <span class="playerOnePoint">(10)</span></p>
-        <p>Top side: <span class="playerTwoName">Player Two</span> <span class="playerTwoPoint">(10)</span></p>
-        <p>Left side: <span class="playerThreeName">Player Three</span> <span class="playerThreePoint">(10)</span></p>
-        <p>Right side: <span class="playerFourName">Player Four</span> <span class="playerFourPoint">(10)</span></p>
+        <div class="info">
+            <div class="infoText">
+                    <p class="playerOneNameContainer">Bottom side: <span class="playerOneName">Player One</span> <span class="playerOnePoint">(10)</span></p>
+                    <p class="playerTwoNameContainer">Top side: <span class="playerTwoName">Player Two</span> <span class="playerTwoPoint">(10)</span></p>
+                    <p class="playerThreeNameContainer">Left side: <span class="playerThreeName">Player Three</span> <span class="playerThreePoint">(10)</span></p>
+                    <p class="playerFourNameContainer">Right side: <span class="playerFourName">Player Four</span> <span class="playerFourPoint">(10)</span></p>
+
+            </div>
+        </div>
     </div>
     <div class="finishedInfo">
         <div class="infoFinishView">

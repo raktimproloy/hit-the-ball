@@ -16,17 +16,38 @@ const box = document.querySelector(".box")
 const showServerId = document.querySelector("#showServerId")
 
 const infoContainer = document.querySelector(".info")
-const serverIdShow = document.querySelector(".serverIdShow")
-const playerCount = document.querySelector(".playerCount")
+// const serverIdShow = document.querySelector(".serverIdShow")
+// const playerCount = document.querySelector(".playerCount")
 const playerOneName = document.querySelector(".playerOneName")
 const playerTwoName = document.querySelector(".playerTwoName")
 const playerThreeName = document.querySelector(".playerThreeName")
 const playerFourName = document.querySelector(".playerFourName")
+const playerOneNameContainer = document.querySelector(".playerOneNameContainer")
+const playerTwoNameContainer = document.querySelector(".playerTwoNameContainer")
+const playerThreeNameContainer = document.querySelector(".playerThreeNameContainer")
+const playerFourNameContainer = document.querySelector(".playerFourNameContainer")
 
+
+const paddle = document.querySelector(".paddle")
+const paddleTop = document.querySelector(".paddleTop")
+const paddleLeft = document.querySelector(".paddleLeft")
+const paddleRight = document.querySelector(".paddleRight")
+
+const clickSound = document.getElementById("buttonMusic")
+
+const clickPlay = () => {
+    clickSound.play()
+}
+
+// const source = "./audio/Extreme-Sport-Trap-Music-PISTA.mp3"
+// const audio = new Audio()
+// audio.src = source
+// audio.autoplay = true
 
 let serverId = "";
 let clickCount = 0;
 nameInput.value = localStorage.getItem("name") || ""
+
 
 // Fire base
 
@@ -71,42 +92,58 @@ const firebaseConfig = {
             console.log("Err");
             })
         }else if(data?.gameInfo === "selection"){ // Selection side before start game
-            playerCount.innerText = data?.playersCount
+            // playerCount.innerText = data?.playersCount
             if(data?.playerOne){
                 playerOne.classList.add("select")
                 playerOne.firstElementChild.innerText = `(${data?.playerOne?.Name})`
+                playerOneNameContainer.style.display= "block"
                 playerOneName.innerText = data?.playerOne?.Name
+                paddle.style.opacity="1"
             }else{
                 playerOne.classList.remove("select")
                 playerOne.firstElementChild.innerText = ``
+                playerOneNameContainer.style.display= "none"
                 playerOneName.innerText = ""
+                paddle.style.opacity="0"
             }
             if(data?.playerTwo){
                 playerTwo.classList.add("select")
                 playerTwo.firstElementChild.innerText = `(${data?.playerTwo?.Name})`
+                playerTwoNameContainer.style.display= "block"
                 playerTwoName.innerText = data?.playerTwo?.Name
+                paddleTop.style.opacity="1"
             }else{
                 playerTwo.classList.remove("select")
                 playerTwo.firstElementChild.innerText = ``
+                playerTwoNameContainer.style.display= "none"
                 playerTwoName.innerText = ""
+                paddleTop.style.opacity="0"
             }
             if(data?.playerThree){
                 playerThree.classList.add("select")
                 playerThree.firstElementChild.innerText = `(${data?.playerThree?.Name})`
+                playerThreeNameContainer.style.display= "block"
                 playerThreeName.innerText = data?.playerThree?.Name
+                paddleLeft.style.opacity="1"
             }else{
                 playerThree.classList.remove("select")
                 playerThree.firstElementChild.innerText = ``
+                playerThreeNameContainer.style.display= "none"
                 playerThreeName.innerText = ""
+                paddleLeft.style.opacity="0"
             }
             if(data?.playerFour){
                 playerFour.classList.add("select")
                 playerFour.firstElementChild.innerText = `(${data?.playerFour?.Name})`
+                playerFourNameContainer.style.display= "block"
                 playerFourName.innerText = data?.playerFour?.Name
+                paddleRight.style.opacity="1"
             }else{
                 playerFour.classList.remove("select")
                 playerFour.firstElementChild.innerText = ``
+                playerFourNameContainer.style.display= "none"
                 playerFourName.innerText = ""
+                paddleRight.style.opacity="0"
             }
         }
     }
@@ -116,8 +153,10 @@ const firebaseConfig = {
   createServer.addEventListener("click", () => {
     if(nameInput.value === ""){
         alert("Input your name")
+        nameInput.classList.add("errorInput")
     }else{
         // create server name
+        nameInput.classList.remove("errorInput")
         let letters = 'abcdefghijklmnopqrstuvwxyz';
         let uniqueCode = '';
         for (let i = 0; i < 8; i++) { // generate an 8-letter code
@@ -130,7 +169,7 @@ const firebaseConfig = {
     
         // added some info in server
         showServerId.innerText = serverId
-        serverIdShow.innerText = serverId
+        // serverIdShow.innerText = serverId
         const creatorName = nameInput.value
         localStorage.setItem("name", creatorName)
         set(ref(db, `hit-the-ball/${serverId}/`), {owner: creatorName, playersCount: "1",gameInfo: "selection", ballMiss: true, ballHolder: "" })
@@ -146,12 +185,13 @@ const firebaseConfig = {
         selectionContainer.style.display = "block"
         startBtn.style.display = "block"
         startBtn.classList.remove("disable")
-        infoContainer.style.display = "block"
+        clickPlay()
     }
   })
 
 //   join other player in server
   joinServer.addEventListener("click", () => {
+    
     const dbRef = ref(getDatabase());
     serverId = serverInput.value
 
@@ -168,11 +208,11 @@ const firebaseConfig = {
 
                         // if server exist in you can select side
                         showServerId.innerText = serverId
-                        serverIdShow.innerText = serverId
+                        // serverIdShow.innerText = serverId
                         serverContainer.style.display = "none"
                         selectionContainer.style.display = "block"
                         startBtn.style.display = "block"
-                        infoContainer.style.display = "block"
+                        infoContainer.style.display = "flex"
                         localStorage.removeItem("player")
                         localStorage.setItem("name", nameInput.value)
 
@@ -198,6 +238,7 @@ const firebaseConfig = {
             
 
         }
+        clickPlay()
     }
   })
 
@@ -237,22 +278,18 @@ const selected = (which) => {
 // all selection button
 playerOne.addEventListener("click", () => {
     selected("playerOne")
-    
 })
 
 playerTwo.addEventListener("click", () => {
     selected("playerTwo")
-    // cngName({identy:"playerTwo", name: `${nameInput.value}`})
 })
 
 playerThree.addEventListener("click", () => {
     selected("playerThree")
-    // cngName({identy:"playerThree", name: `${nameInput.value ? nameInput.value : "playerThree"}`})
 })
 
 playerFour.addEventListener("click", () => {
     selected("playerFour")
-    // cngName({identy:"playerFour", name: `${nameInput.value ? nameInput.value : "playerFour"}`})
 })
 
 
@@ -261,6 +298,7 @@ startBtn.addEventListener("click", () => {
     set(ref(db, `hit-the-ball/${serverId}/gameInfo`), `playing`)
     .then(() => {
         selectionContainer.style.display = "none"
+        infoContainer.style.display = "flex"
         box.style.display = "block"
         startBtn.style.display = "none"
         set(ref(db, `hit-the-ball/${serverId}/ballHolder`), `${localStorage.getItem("player")}`)
@@ -270,6 +308,7 @@ startBtn.addEventListener("click", () => {
         .catch((err) => {
         console.log("Err");
         })
+        clickPlay()
         game(serverId)
     })
     .catch((err) => {
